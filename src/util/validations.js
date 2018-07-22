@@ -18,10 +18,10 @@ const validateLogin = Joi.alternatives().try(
 );
 
 const validateExpense = Joi.object({
-  title: Joi.string().alphanum().min(2).max(30).required(),
+  title: Joi.string().min(2).max(30).required(),
   description: Joi.string().required(),
   amount: Joi.string().required(),
-  date: Joi.string().required()
+  date: Joi.date().required()
 });
 
 

@@ -1,9 +1,10 @@
 const Relish = require('relish')({});
 const { login, register, verifyUniqueUser } = require('../controllers/UserController');
-const { getExpenses, addExpense } = require('../controllers/ExpenseController');
+const { getExpenses, addExpense, updateExpense, deleteExpense } = require('../controllers/ExpenseController');
 const {
   validateRegister,
   validateLogin,
+  validateExpense
 } = require('../util/validations');
 
 module.exports = [
@@ -42,6 +43,24 @@ module.exports = [
     method: 'POST',
     options: {
       handler: addExpense,
+      validate: {
+        payload: validateExpense,
+        failAction: Relish.failAction
+      }
+    },
+  },
+  {
+    path: '/api/expenses/{id}',
+    method: 'PUT',
+    options: {
+      handler: updateExpense
+    },
+  },
+  {
+    path: '/api/expenses/{id}',
+    method: 'DELETE',
+    options: {
+      handler: deleteExpense
     },
   },
 ];

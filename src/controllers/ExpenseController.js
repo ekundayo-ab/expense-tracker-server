@@ -2,7 +2,7 @@ const Boom = require('boom');
 const Expense = require('../models/Expense');
 
 const getExpenses = async () => {
-  const users = await Expense.find();
+  const users = await Expense.find().select('-__v');
   if (!users.length) {
     throw Boom.notFound('No expenses found');
   }
@@ -15,82 +15,64 @@ const addExpense = async (req) => {
     const expense = await Expense.create({ title, description, amount, date });
     return expense;
   } catch (error) {
-    throw Boom.internal('Internal server error');
+    if (error.name === 'ValidationError') throw Boom.badRequest(error);
+    throw Boom.internal(error);
   }
 };
 
-// const getCompanies = (req, reply) => {
-//   return new Promise((resolve, reject) => {
-//     Company.find({}, (err, companies) => {
-//         if (err) {
-//             reply(err).code(404);
-//         }
-//         return resolve(reply.response(companies));
-//     })
-//   });
-// }
+const getExpense = async (req) => {
+  const { id } = req.params;
+  const expense = await Expense.findById(id);
+  if (!expense) {
+    throw Boom.notFound('Not found');
+  }
+  return expense;
+};
 
-// const getCompany = (req, reply) => {
-//   return new Promise((resolve, reject) => {
-//     if (!req.params.id) {
-//         return resolve(reply({err: 'id is required param'}).code(400));
-//     }
+const updateExpense = async (req) => {
+  const { id } = req.params;
+  let attributes = {};
 
-//     Company.findById(req.params.id, (err, company) => {
-//         if (err) {
-//             return reply(err).code(404);
-//         }
-//         return resolve(reply.response(company));
-//     });
-//   });
-// }
+  const allowedAttributes = ['title', 'description', 'date', 'amount'];
 
-// const updateCompany = (req, reply) => {
-//   return new Promise((resolve, reject) => {
-//     if (!req.params.id) {
-//       return reply({ err: 'id is required param' }).code(400);
-//     }
-//     let attributes = {};
+  if (req.payload) {
+    attributes = Object.keys(req.payload)
+      .filter(key => allowedAttributes.includes(key))
+      .reduce((obj, key) => {
+        obj[key] = req.payload[key];
+        return obj;
+      }, {});
+  }
 
-//     if (req.payload.name) {
-//         attributes.name = req.payload.name;
-//     }
-//     if (req.payload.city) {
-//         attributes.city = req.payload.city;
-//     }
-//     if (req.payload.address) {
-//         attributes.address = req.payload.address;
-//     }
+  try {
+    const updatedExpense = await Expense
+      .findByIdAndUpdate(id, attributes, { new: true })
+      .select('-__v');
+    return updatedExpense;
+  } catch (error) {
+    throw Boom.internal(error);
+  }
+};
 
-//     Company.findByIdAndUpdate(
-//           req.params.id,
-//           attributes,
-//           {new: true},
-//           (err, company) => {
-//         if (err) {
-//             return resolve(reply(err).code(500));
-//         }
-//         return resolve(reply.response(company));
-//     })
+const deleteExpense = async (req) => {
+  const { id } = req.params;
 
-//   });
-// }
-
-// const deleteCompany = (req, reply) => {
-//   return new Promise((resolve, reject) => {
-//     Company.findByIdAndRemove(req.params.id, (err, result) => {
-//       if (err) {
-//           return resolve(reply(err).code(500));
-//       }
-//       if (result) {
-//         return resolve(reply.response({msg: `company ${result.name} deleted`}));
-//       }
-//       return resolve(reply.response({ msg: 'Already deleted' }));
-//     })
-//   })
-// }
+  try {
+    const deletedExpense = await Expense.findByIdAndRemove(id)
+      .select('-__v');
+    if (deletedExpense) {
+      return { message: `${deletedExpense.title} deleted`, expense: deletedExpense };
+    }
+    return Boom.notFound('Not found');
+  } catch (error) {
+    throw Boom.internal(error);
+  }
+};
 
 module.exports = {
   addExpense,
   getExpenses,
+  getExpense,
+  updateExpense,
+  deleteExpense
 };
