@@ -1,13 +1,15 @@
-const Relish = require('relish')({});
-const { login, register, verifyUniqueUser } = require('../controllers/UserController');
-const { getExpenses, addExpense, updateExpense, deleteExpense } = require('../controllers/ExpenseController');
-const {
+import relish from 'relish';
+import { login, register, verifyUniqueUser, verifyToken } from '../controllers/UserController';
+import { getExpenses, addExpense, updateExpense, deleteExpense } from '../controllers/ExpenseController';
+import {
   validateRegister,
   validateLogin,
   validateExpense
-} = require('../util/validations');
+} from '../util/validations';
 
-module.exports = [
+const Relish = relish({});
+
+const routes = [
   {
     path: '/api/register',
     method: 'POST',
@@ -32,11 +34,20 @@ module.exports = [
     },
   },
   {
+    path: '/api/verify-user',
+    method: 'POST',
+    options: {
+      handler: verifyToken,
+      auth: 'jwt'
+    },
+  },
+  {
     path: '/api/expenses',
     method: 'GET',
     options: {
       handler: getExpenses,
-    },
+      auth: 'jwt'
+    }
   },
   {
     path: '/api/expenses',
@@ -64,3 +75,5 @@ module.exports = [
     },
   },
 ];
+
+export default routes;

@@ -1,5 +1,5 @@
-const jwt = require('jsonwebtoken');
-const secret = require('../../config');
+import jwt from 'jsonwebtoken';
+import secret from '../../config';
 
 const createToken = (user) => {
   let scopes;
@@ -15,4 +15,4 @@ const createToken = (user) => {
   }, secret, { algorithm: 'HS256', expiresIn: '1h' });
 };
 
-module.exports = createToken;
+export default createToken;

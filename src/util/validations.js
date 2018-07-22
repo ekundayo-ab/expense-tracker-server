@@ -1,4 +1,4 @@
-const Joi = require('joi');
+import Joi from 'joi';
 
 const validateRegister = Joi.object({
   username: Joi.string().alphanum().min(2).max(30).required(),
@@ -25,17 +25,11 @@ const validateExpense = Joi.object({
 });
 
 
-const validateToken = async function (decoded, request) {
-  // do your checks to see if the person is valid
-  if (!people[decoded.id]) {
-    return { isValid: false };
-  }
-  else {
-    return { isValid: true };
-  }
+const validateToken = (decoded, req, h) => {
+  return { isValid: true, credentials: { hey: 'makers' }, h };
 };
 
-module.exports = {
+export {
   validateToken,
   validateRegister,
   validateLogin,

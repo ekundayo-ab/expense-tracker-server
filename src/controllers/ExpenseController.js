@@ -1,5 +1,5 @@
-const Boom = require('boom');
-const Expense = require('../models/Expense');
+import Boom from 'boom';
+import Expense from '../models/Expense';
 
 const getExpenses = async () => {
   const users = await Expense.find().select('-__v');
@@ -69,7 +69,7 @@ const deleteExpense = async (req) => {
   }
 };
 
-module.exports = {
+export {
   addExpense,
   getExpenses,
   getExpense,

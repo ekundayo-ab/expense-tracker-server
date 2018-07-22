@@ -1,7 +1,7 @@
-const bcrypt = require('bcrypt');
-const Boom = require('boom');
-const User = require('../models/User');
-const createToken = require('../util/token');
+import bcrypt from 'bcrypt';
+import Boom from 'boom';
+import User from '../models/User';
+import createToken from '../util/token';
 
 const verifyUniqueUser = async (req) => {
   try {
@@ -50,15 +50,18 @@ const login = async (req) => {
   if (user) {
     const isValid = await bcrypt.compare(password, user.password);
     if (isValid) {
-      return user;
+      return { token: createToken(user) };
     }
     return Boom.badRequest('Incorrect password!');
   }
   return Boom.badRequest('Incorrect username or email!');
 };
 
-module.exports = {
+const verifyToken = async req => req.auth.credentials.decoded;
+
+export {
   login,
   register,
-  verifyUniqueUser
+  verifyUniqueUser,
+  verifyToken
 };
