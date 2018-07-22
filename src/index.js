@@ -1,6 +1,7 @@
 import Hapi from 'hapi';
 import HapiAuthJWT from 'hapi-auth-jwt2';
 import mongoose from 'mongoose';
+import morgan from 'morgan';
 import routes from './routes';
 import secret from '../config';
 import { validateToken } from './util/validations';
@@ -15,7 +16,8 @@ mongoose.connection.on('error', err =>
 
 const server = new Hapi.Server({
   host: 'localhost',
-  port: 3000
+  port: 3000,
+  routes: { cors: true }
 });
 
 server.route({
