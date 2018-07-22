@@ -25,9 +25,7 @@ const validateExpense = Joi.object({
 });
 
 
-const validateToken = (decoded, req, h) => {
-  return { isValid: true, credentials: { hey: 'makers' }, h };
-};
+const validateToken = (decoded, req, h) => ({ isValid: true, credentials: { decoded }, h });
 
 export {
   validateToken,

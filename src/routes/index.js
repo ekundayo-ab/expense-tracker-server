@@ -35,7 +35,7 @@ const routes = [
   },
   {
     path: '/api/verify-user',
-    method: 'POST',
+    method: 'GET',
     options: {
       handler: verifyToken,
       auth: 'jwt'
@@ -54,6 +54,7 @@ const routes = [
     method: 'POST',
     options: {
       handler: addExpense,
+      auth: 'jwt',
       validate: {
         payload: validateExpense,
         failAction: Relish.failAction
@@ -64,14 +65,16 @@ const routes = [
     path: '/api/expenses/{id}',
     method: 'PUT',
     options: {
-      handler: updateExpense
+      handler: updateExpense,
+      auth: 'jwt'
     },
   },
   {
     path: '/api/expenses/{id}',
     method: 'DELETE',
     options: {
-      handler: deleteExpense
+      handler: deleteExpense,
+      auth: 'jwt'
     },
   },
 ];
