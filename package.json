@@ -4,16 +4,23 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "bcrypt": "^3.0.0",
     "boom": "^7.2.0",
     "hapi": "^17.5.2",
-    "hapi-auth-jwt": "^4.0.0",
+    "hapi-auth-jwt2": "^8.1.0",
     "joi": "^13.4.0",
-    "mongoose": "^5.2.4"
+    "jsonwebtoken": "^8.3.0",
+    "mongoose": "^5.2.4",
+    "relish": "^3.0.0"
   },
   "devDependencies": {
+    "eslint": "^5.2.0",
+    "eslint-config-airbnb-base": "^13.0.0",
+    "eslint-plugin-import": "^2.13.0",
     "nodemon": "^1.18.3"
   },
   "scripts": {
+    "start": "nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
