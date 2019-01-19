@@ -12,7 +12,9 @@ import { validationErrorParser } from './util/parser';
 
 dotenv.config();
 
-const mongoDbUri = process.env.DB_URL;
+const mongoDbUri = process.env.NODE_ENV !== 'test'
+  ? process.env.DB_URL : process.env.TEST_DB_URL;
+
 mongoose.connect(mongoDbUri, { useNewUrlParser: true });
 mongoose.connection.on('connected', () => {
   console.log(`app is connected to ${mongoDbUri}`); //eslint-disable-line
@@ -20,7 +22,7 @@ mongoose.connection.on('connected', () => {
 mongoose.connection.on('error', err =>
   console.log('error while connecting to mongodb', err)); //eslint-disable-line
 
-const server = new Hapi.Server({
+export const server = new Hapi.Server({
   host: process.env.HOST || 'localhost',
   port: process.env.PORT || 8000,
   routes: {
@@ -32,7 +34,6 @@ const server = new Hapi.Server({
 const options = {
   includes: {
     request: ['headers', 'payload'],
-    // response: ['headers', 'payload']
   },
   ops: false,
   reporters: {
@@ -45,13 +46,8 @@ const options = {
 
 const init = async () => {
   await server.register([
-    {
-      plugin: HapiAuthJWT
-    },
-    {
-      plugin: good,
-      options
-    }
+    { plugin: HapiAuthJWT },
+    { plugin: good, options }
   ]);
 
   server.auth.strategy('jwt', 'jwt', {
@@ -64,6 +60,8 @@ const init = async () => {
     type: 'onPreResponse',
     method: (request, h) => validationErrorParser(request, h)
   });
+
+  server.realm.modifiers.route.prefix = '/api';
 
   server.route(routes);
 
@@ -78,3 +76,7 @@ process.on('unhandledRejection', (err) => {
 });
 
 init();
+
+export default {
+  server
+};

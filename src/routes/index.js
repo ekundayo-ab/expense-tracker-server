@@ -9,6 +9,13 @@ import {
 
 const routes = [
   {
+    path: '/',
+    method: ['GET', 'POST'],
+    handler(req, handler) {
+      return handler.response('Welcome to Expense Tracker API!');
+    }
+  },
+  {
     method: ['GET', 'POST'],
     path: '/{any*}',
     handler() {
@@ -17,14 +24,7 @@ const routes = [
 
   },
   {
-    path: '/',
-    method: 'POST',
-    handler(req, handler) {
-      return handler.response('Welcome to Expense Tracker API!');
-    }
-  },
-  {
-    path: '/api/register',
+    path: '/register',
     method: 'POST',
     options: {
       handler: register,
@@ -35,7 +35,7 @@ const routes = [
     },
   },
   {
-    path: '/api/login',
+    path: '/login',
     method: 'POST',
     options: {
       handler: login,
@@ -46,7 +46,7 @@ const routes = [
     },
   },
   {
-    path: '/api/verify-user',
+    path: '/verify-user',
     method: 'GET',
     options: {
       handler: verifyToken,
@@ -54,7 +54,7 @@ const routes = [
     },
   },
   {
-    path: '/api/expenses',
+    path: '/expenses',
     method: 'GET',
     options: {
       handler: getExpenses,
@@ -62,7 +62,7 @@ const routes = [
     }
   },
   {
-    path: '/api/expenses',
+    path: '/expenses',
     method: 'POST',
     options: {
       handler: addExpense,
@@ -73,7 +73,7 @@ const routes = [
     },
   },
   {
-    path: '/api/expenses/{id}',
+    path: '/expenses/{id}',
     method: 'PUT',
     options: {
       handler: updateExpense,
@@ -81,7 +81,7 @@ const routes = [
     },
   },
   {
-    path: '/api/expenses/{id}',
+    path: '/expenses/{id}',
     method: 'DELETE',
     options: {
       handler: deleteExpense,
