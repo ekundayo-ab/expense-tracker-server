@@ -1,0 +1,10 @@
+{
+    "extends": "eslint-config-airbnb-base",
+    "rules": {
+      "comma-dangle": "off",
+      "no-underscore-dangle": "off",
+      "implicit-arrow-linebreak": "off",
+      "newline-per-chained-call": "off",
+      "object-curly-newline": "off"
+    }
+}
