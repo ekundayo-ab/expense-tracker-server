@@ -12,7 +12,9 @@ import { validationErrorParser } from './util/parser';
 
 dotenv.config();
 
-const mongoDbUri = process.env.DB_URL;
+const mongoDbUri = process.env.NODE_ENV !== 'test'
+  ? process.env.DB_URL : process.env.TEST_DB_URL;
+
 mongoose.connect(mongoDbUri, { useNewUrlParser: true });
 mongoose.connection.on('connected', () => {
   console.log(`app is connected to ${mongoDbUri}`); //eslint-disable-line

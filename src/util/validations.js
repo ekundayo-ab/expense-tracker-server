@@ -2,20 +2,15 @@ import Joi from 'joi';
 
 const validateRegister = Joi.object({
   username: Joi.string().alphanum().min(2).max(30).required(),
-  email: Joi.string().email().required(),
-  password: Joi.string().required()
+  email: Joi.string().email(),
+  password: Joi.string().min(6).max(200).required()
 });
 
-const validateLogin = Joi.alternatives().try(
-  Joi.object({
-    username: Joi.string().alphanum().min(2).max(30).required(),
-    password: Joi.string().required()
-  }),
-  Joi.object({
-    email: Joi.string().email().required(),
-    password: Joi.string().required()
-  })
-);
+const validateLogin = Joi.object().keys({
+  username: Joi.string().alphanum().min(2).max(30).required(),
+  email: Joi.string().email(),
+  password: Joi.string().required()
+}).or('username', 'email');
 
 const validateExpense = Joi.object({
   title: Joi.string().min(2).max(30).required(),
