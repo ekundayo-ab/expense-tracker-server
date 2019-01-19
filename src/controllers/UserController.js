@@ -46,7 +46,7 @@ const login = async (req) => {
   const isValid = user && await bcrypt.compare(password, user.password);
 
   if (!user || !isValid) {
-    return Boom.unauthorized('Incorrect username or email!');
+    return Boom.unauthorized('Incorrect credentials!');
   }
 
   return { token: createToken(user) };
