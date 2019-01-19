@@ -1,0 +1,10 @@
+env:
+language: node_js
+node_js:
+  - node
+notifications:
+  email: false
+services:
+  - mongodb
+before_script:
+  - npm run test
