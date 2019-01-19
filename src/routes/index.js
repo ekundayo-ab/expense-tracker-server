@@ -1,5 +1,5 @@
 import Boom from 'boom';
-import { login, register, verifyUniqueUser, verifyToken } from '../controllers/UserController';
+import { login, register, checkUserExistence, verifyToken } from '../controllers/UserController';
 import { getExpenses, addExpense, updateExpense, deleteExpense } from '../controllers/ExpenseController';
 import {
   validateRegister,
@@ -28,7 +28,7 @@ const routes = [
     method: 'POST',
     options: {
       handler: register,
-      pre: [{ method: verifyUniqueUser }],
+      pre: [{ method: checkUserExistence, assign: 'user' }],
       validate: {
         payload: validateRegister
       }
@@ -39,6 +39,7 @@ const routes = [
     method: 'POST',
     options: {
       handler: login,
+      pre: [{ method: checkUserExistence, assign: 'user' }],
       validate: {
         payload: validateLogin
       }
