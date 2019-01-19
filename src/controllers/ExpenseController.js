@@ -39,6 +39,7 @@ const updateExpense = async (req) => {
     attributes = Object.keys(req.payload)
       .filter(key => allowedAttributes.includes(key))
       .reduce((obj, key) => {
+        // eslint-disable-next-line no-param-reassign
         obj[key] = req.payload[key];
         return obj;
       }, {});

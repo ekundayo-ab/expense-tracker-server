@@ -45,7 +45,7 @@ describe('User', () => {
       expect(response.statusCode).to.equal(409);
       expect(response.result.message).to.equal('User already exists');
     });
-  })
+  });
 
   describe('logging in', () => {
     it('should see token if login is successful', async () => {
@@ -81,8 +81,6 @@ describe('User', () => {
       expect(response.result.message).to.contain('Incorrect credentials!');
     });
   });
-
 });
-
 
 exports.lab = lab;
