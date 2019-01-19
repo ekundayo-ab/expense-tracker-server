@@ -19,21 +19,18 @@ const verifyUniqueUser = async (req) => {
 
 const register = async (req) => {
   const user = new User();
-  user.email = req.payload.email;
-  user.username = req.payload.username;
+  const { email, username, password } = req.payload;
+
+  user.email = email;
+  user.username = username;
   user.admin = false;
 
   try {
-    user.password = await bcrypt.hash(req.payload.password, 10);
-  } catch (error) {
-    throw Boom.badRequest(error);
-  }
-
-  try {
+    user.password = await bcrypt.hash(password, 10);
     const newUser = await user.save();
     return { token: createToken(newUser) };
   } catch (error) {
-    throw Boom.badRequest(error);
+    throw Boom.internal();
   }
 };
 
@@ -52,9 +49,9 @@ const login = async (req) => {
     if (isValid) {
       return { token: createToken(user) };
     }
-    return Boom.badRequest('Incorrect password!');
+    return Boom.unauthorized('Incorrect password!');
   }
-  return Boom.badRequest('Incorrect username or email!');
+  return Boom.unauthorized('Incorrect username or email!');
 };
 
 const verifyToken = async req => req.auth.credentials.decoded;

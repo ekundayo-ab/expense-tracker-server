@@ -1,4 +1,4 @@
-import relish from 'relish';
+import Boom from 'boom';
 import { login, register, verifyUniqueUser, verifyToken } from '../controllers/UserController';
 import { getExpenses, addExpense, updateExpense, deleteExpense } from '../controllers/ExpenseController';
 import {
@@ -7,9 +7,22 @@ import {
   validateExpense
 } from '../util/validations';
 
-const Relish = relish({});
-
 const routes = [
+  {
+    method: ['GET', 'POST'],
+    path: '/{any*}',
+    handler() {
+      return Boom.notFound('Humm!!, this resource isn’t available.');
+    }
+
+  },
+  {
+    path: '/',
+    method: 'POST',
+    handler(req, handler) {
+      return handler.response('Welcome to Expense Tracker API!');
+    }
+  },
   {
     path: '/api/register',
     method: 'POST',
@@ -17,8 +30,7 @@ const routes = [
       handler: register,
       pre: [{ method: verifyUniqueUser }],
       validate: {
-        payload: validateRegister,
-        failAction: Relish.failAction
+        payload: validateRegister
       }
     },
   },
@@ -28,8 +40,7 @@ const routes = [
     options: {
       handler: login,
       validate: {
-        payload: validateLogin,
-        failAction: Relish.failAction
+        payload: validateLogin
       }
     },
   },
@@ -56,8 +67,7 @@ const routes = [
       handler: addExpense,
       auth: 'jwt',
       validate: {
-        payload: validateExpense,
-        failAction: Relish.failAction
+        payload: validateExpense
       }
     },
   },

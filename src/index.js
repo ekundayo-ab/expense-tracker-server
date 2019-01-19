@@ -3,10 +3,12 @@ import HapiAuthJWT from 'hapi-auth-jwt2';
 import mongoose from 'mongoose';
 import good from 'good';
 import dotenv from 'dotenv';
+import relish from 'relish';
 
 import routes from './routes';
 import secret from '../config';
 import { validateToken } from './util/validations';
+import { validationErrorParser } from './util/parser';
 
 dotenv.config();
 
@@ -21,14 +23,9 @@ mongoose.connection.on('error', err =>
 const server = new Hapi.Server({
   host: process.env.HOST || 'localhost',
   port: process.env.PORT || 8000,
-  routes: { cors: true }
-});
-
-server.route({
-  path: '/',
-  method: 'POST',
-  handler(req, handler) {
-    return handler.response('Welcome to HapiJS course!!');
+  routes: {
+    cors: true,
+    validate: { failAction: relish({ stripQuotes: true }).failAction }
   }
 });
 
@@ -63,9 +60,15 @@ const init = async () => {
     validate: validateToken,
   });
 
+  server.ext({
+    type: 'onPreResponse',
+    method: (request, h) => validationErrorParser(request, h)
+  });
+
   server.route(routes);
 
   await server.start();
+
   console.log(`Server running at: ${server.info.uri}`); //eslint-disable-line
 };
 
