@@ -9,11 +9,11 @@ import routes from './routes';
 import secret from '../config';
 import { validateToken } from './util/validations';
 import { validationErrorParser } from './util/parser';
+import environment from '../config/environment';
 
 dotenv.config();
 
-const mongoDbUri = process.env.NODE_ENV !== 'test'
-  ? process.env.DB_URL : process.env.TEST_DB_URL;
+const mongoDbUri = environment.dbUrl;
 
 mongoose.connect(mongoDbUri, { useNewUrlParser: true });
 mongoose.connection.on('connected', () => {
