@@ -3,7 +3,7 @@ import Boom from 'boom';
 import User from '../models/User';
 import createToken from '../util/token';
 
-const verifyUniqueUser = async (req) => {
+const checkUserExistence = async (req) => {
   try {
     const result = await User.findOne({
       $or: [
@@ -11,6 +11,7 @@ const verifyUniqueUser = async (req) => {
         { username: req.payload.username }
       ]
     });
+
     return result;
   } catch (error) {
     throw Boom.badRequest(error);
@@ -18,6 +19,10 @@ const verifyUniqueUser = async (req) => {
 };
 
 const register = async (req) => {
+  if (req.pre.user) {
+    return Boom.conflict('User already exists');
+  }
+
   const user = new User();
   const { email, username, password } = req.payload;
 
@@ -35,23 +40,16 @@ const register = async (req) => {
 };
 
 const login = async (req) => {
+  const { user } = req.pre;
   const { password } = req.payload;
 
-  const user = await User.findOne({
-    $or: [
-      { email: req.payload.email },
-      { username: req.payload.username }
-    ]
-  });
+  const isValid = user && await bcrypt.compare(password, user.password);
 
-  if (user) {
-    const isValid = await bcrypt.compare(password, user.password);
-    if (isValid) {
-      return { token: createToken(user) };
-    }
-    return Boom.unauthorized('Incorrect password!');
+  if (!user || !isValid) {
+    return Boom.unauthorized('Incorrect username or email!');
   }
-  return Boom.unauthorized('Incorrect username or email!');
+
+  return { token: createToken(user) };
 };
 
 const verifyToken = async req => req.auth.credentials.decoded;
@@ -59,6 +57,6 @@ const verifyToken = async req => req.auth.credentials.decoded;
 export {
   login,
   register,
-  verifyUniqueUser,
+  checkUserExistence,
   verifyToken
 };
