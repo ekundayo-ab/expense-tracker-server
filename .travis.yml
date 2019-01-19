@@ -15,7 +15,7 @@ deploy:
   on:
     tags: true
     all_branches: true
-  app: expense-tracker-server
+  app: expense-tracker-dayo
   run:
     - "npm install"
     - "npm run build && npm run start"
