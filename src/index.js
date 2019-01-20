@@ -24,7 +24,6 @@ mongoose.connection.on('error', err =>
   console.log('error while connecting to mongodb', err)); //eslint-disable-line
 
 export const server = new Hapi.Server({
-  host: process.env.HOST || 'localhost',
   port: process.env.PORT || 8000,
   routes: {
     cors: true,
