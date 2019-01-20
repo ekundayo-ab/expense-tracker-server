@@ -1,4 +1,4 @@
-import dotenv from 'dotenv';
+const dotenv = require('dotenv');
 
 dotenv.config();
 
@@ -10,6 +10,6 @@ const envDbUrls = {
   production: PROD_DB_URL
 };
 
-export default {
+module.exports = {
   dbUrl: envDbUrls[process.env.NODE_ENV || 'development']
 };
