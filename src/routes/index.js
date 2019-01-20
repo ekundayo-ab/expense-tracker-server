@@ -1,4 +1,3 @@
-import Boom from 'boom';
 import { login, register, checkUserExistence, verifyToken } from '../controllers/UserController';
 import { getExpenses, addExpense, updateExpense, deleteExpense } from '../controllers/ExpenseController';
 import {
@@ -8,21 +7,6 @@ import {
 } from '../util/validations';
 
 const routes = [
-  {
-    path: '/',
-    method: ['GET', 'POST'],
-    handler(req, handler) {
-      return handler.response('Welcome to Expense Tracker API!');
-    }
-  },
-  {
-    method: ['GET', 'POST'],
-    path: '/{any*}',
-    handler() {
-      return Boom.notFound('Humm!!, this resource isn’t available.');
-    }
-
-  },
   {
     path: '/register',
     method: 'POST',

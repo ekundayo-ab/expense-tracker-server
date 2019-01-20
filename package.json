@@ -11,10 +11,13 @@
     "good-console": "^7.1.0",
     "hapi": "^17.5.2",
     "hapi-auth-jwt2": "^8.1.0",
+    "inert": "^5.1.2",
     "joi": "^13.4.0",
     "jsonwebtoken": "^8.3.0",
+    "lout": "^11.1.0",
     "mongoose": "^5.2.4",
-    "relish": "^3.0.0"
+    "relish": "^3.0.0",
+    "vision": "^5.4.4"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
@@ -32,6 +35,7 @@
   },
   "scripts": {
     "build": "babel src --out-dir lib",
+    "heroku-postbuild": "npm run build",
     "start": "node lib/index.js",
     "dev": "nodemon --exec babel-node src/index.js",
     "test": "NODE_ENV=test lab tests -T lab-babel -v -L -C -l"

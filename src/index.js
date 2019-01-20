@@ -4,26 +4,25 @@ import mongoose from 'mongoose';
 import good from 'good';
 import dotenv from 'dotenv';
 import relish from 'relish';
+import lout from 'lout';
+import inert from 'inert';
+import vision from 'vision';
 
 import routes from './routes';
-import secret from '../config';
+import { secret, dbUrl } from '../config';
 import { validateToken } from './util/validations';
 import { validationErrorParser } from './util/parser';
 
 dotenv.config();
 
-const mongoDbUri = process.env.NODE_ENV !== 'test'
-  ? process.env.DB_URL : process.env.TEST_DB_URL;
-
-mongoose.connect(mongoDbUri, { useNewUrlParser: true });
+mongoose.connect(dbUrl, { useNewUrlParser: true });
 mongoose.connection.on('connected', () => {
-  console.log(`app is connected to ${mongoDbUri}`); //eslint-disable-line
+  console.log(`app is connected to the database`); //eslint-disable-line
 });
 mongoose.connection.on('error', err =>
   console.log('error while connecting to mongodb', err)); //eslint-disable-line
 
 export const server = new Hapi.Server({
-  host: process.env.HOST || 'localhost',
   port: process.env.PORT || 8000,
   routes: {
     cors: true,
@@ -47,11 +46,14 @@ const options = {
 const init = async () => {
   await server.register([
     { plugin: HapiAuthJWT },
-    { plugin: good, options }
+    { plugin: good, options },
+    { plugin: lout },
+    { plugin: inert },
+    { plugin: vision },
   ]);
 
   server.auth.strategy('jwt', 'jwt', {
-    key: secret,
+    secret,
     verifyOptions: { algorithms: ['HS256'] },
     validate: validateToken,
   });
@@ -61,8 +63,16 @@ const init = async () => {
     method: (request, h) => validationErrorParser(request, h)
   });
 
-  server.realm.modifiers.route.prefix = '/api';
+  server.route({
+    method: ['GET', 'POST'],
+    path: '/{any*}',
+    handler(req, h) {
+      return h.redirect('/docs');
+    },
+    options: { plugins: { lout: false } }
+  });
 
+  server.realm.modifiers.route.prefix = '/api';
   server.route(routes);
 
   await server.start();
