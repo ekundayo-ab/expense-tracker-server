@@ -9,10 +9,9 @@ import inert from 'inert';
 import vision from 'vision';
 
 import routes from './routes';
-import secret from '../config';
+import { secret, dbUrl } from '../config';
 import { validateToken } from './util/validations';
 import { validationErrorParser } from './util/parser';
-import { dbUrl } from '../config/environment';
 
 dotenv.config();
 
@@ -54,7 +53,7 @@ const init = async () => {
   ]);
 
   server.auth.strategy('jwt', 'jwt', {
-    key: secret,
+    secret,
     verifyOptions: { algorithms: ['HS256'] },
     validate: validateToken,
   });

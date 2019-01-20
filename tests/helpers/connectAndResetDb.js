@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
-import environment from '../../config/environment';
+import { dbUrl } from '../../config';
 
 export const connectAndResetDb = () =>
-  mongoose.connect(environment.dbUrl, { useNewUrlParser: true })
+  mongoose.connect(dbUrl, { useNewUrlParser: true })
     .then(() => {
       mongoose.connection.dropDatabase();
     });

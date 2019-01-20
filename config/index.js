@@ -2,8 +2,9 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-const { TEST_DB_URL, DEV_DB_URL, PROD_DB_URL } = process.env;
+const secret = process.env.SECRET_KEY;
 
+const { TEST_DB_URL, DEV_DB_URL, PROD_DB_URL } = process.env;
 const envDbUrls = {
   test: TEST_DB_URL,
   development: DEV_DB_URL,
@@ -11,5 +12,6 @@ const envDbUrls = {
 };
 
 module.exports = {
-  dbUrl: envDbUrls[process.env.NODE_ENV || 'development']
+  dbUrl: envDbUrls[process.env.NODE_ENV || 'development'],
+  secret
 };

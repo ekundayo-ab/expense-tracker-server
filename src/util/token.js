@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import secret from '../../config';
+import { secret } from '../../config';
 
 const createToken = (user) => {
   let scopes;
