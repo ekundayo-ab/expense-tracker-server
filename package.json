@@ -32,7 +32,7 @@
   },
   "scripts": {
     "build": "./node_modules/.bin/babel src --out-dir lib",
-    "start": "node lib/index.js",
+    "start": "NODE_ENV=production node lib/index.js",
     "dev": "nodemon --exec babel-node src/index.js",
     "test": "NODE_ENV=test lab tests -T lab-babel -v -L -C -l"
   },
