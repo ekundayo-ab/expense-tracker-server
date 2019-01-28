@@ -3,9 +3,6 @@ import Expense from '../models/Expense';
 
 const getExpenses = async () => {
   const users = await Expense.find().select('-__v');
-  if (!users.length) {
-    throw Boom.notFound('No expenses found');
-  }
   return users;
 };
 
